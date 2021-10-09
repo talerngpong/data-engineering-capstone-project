@@ -1,0 +1,8 @@
+docker-compose.yaml
+logs
+.env
+__pycache__
+.DS_Store
+venv
+.idea
+etl.cfg
