@@ -68,3 +68,22 @@ This project aims for a data warehouse with Kimball's Bus architecture resulting
 
 ## Future Improvements
 - In case of scaling up (let's say `World Temperature Data` size comes with 100 times of an original size), one file of `GlobalLandTemperaturesByCity.csv` should be split to multiple files. Those should be partitioned to have a same file size or number of rows or logically by date. Moreover, if partition by data is too fine, PySpark can split it to larger unit of `month + year`.
+
+## Data Dictionary
+### Temperature Fact Table (aka `fact_temperature`)
+| Column                          | Description                                            |
+|---------------------------------|--------------------------------------------------------|
+| date                            | Date when temperature got measured                     |
+| city_id                         | Foreign key of city where temperature got measured     |
+| average_temperature             | Temperature of global average land in celsius          |
+| averate_temperature_uncertainty | 95% confidence interval around the average temperature |
+
+### City Dimension Table (aka `dim_city`)
+| Column       | Description                                      |
+|--------------|--------------------------------------------------|
+| city_id      | Primary key made from city name and country name |
+| city_name    | Name of city                                     |
+| country_name | Name of country where city belongs to            |
+| latitude     | Latitude of city                                 |
+| longitude    | Longitude of city                                |
+| country_code | Code of country where city belongs to            |
