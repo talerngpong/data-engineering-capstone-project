@@ -120,7 +120,7 @@ Even though we can execute the query and get the result set, we can see that the
 ## Possible Challenging Scenarios
 
 ### The data was increased by 100x.
-In case of scaling up (let's say `World Temperature Data` size comes with 100 times of an original size), one file of `GlobalLandTemperaturesByCity.csv` should be split to multiple files. Those should be partitioned to have a same file size or number of rows or logically by date. Moreover, if partition by data is too fine, PySpark can split it to larger unit of `month + year`.
+In case of scaling up (let's say `World Temperature Data` size comes with 100 times of an original size), one file of `GlobalLandTemperaturesByCity.csv` should be split to multiple files. Those should be partitioned to have a same file size or number of rows or logically by date. Moreover, if partition by data is too fine, PySpark can split it to larger unit of `month + year`. Then, each Spark executor will process each partition separately.
 
 ### The pipelines would be run on a daily basis by 7 am every day.
 Since this pipeline based on Airflow DAG, DAG allows us to declare schedule interval (of its constructor argument `schedule_interval`) as [Crontab](https://en.wikipedia.org/wiki/Cron) schedule value. Then, we can have its value as `0 7 * * *` to achieve the desired schedule.
