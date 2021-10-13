@@ -66,9 +66,6 @@ This project aims for a data warehouse with Kimball's Bus architecture resulting
 1. `dim_city` should contains no null of country code.
 2. `average_temperature_uncertainty` should be equal or more than zero.
 
-## Future Improvements
-- In case of scaling up (let's say `World Temperature Data` size comes with 100 times of an original size), one file of `GlobalLandTemperaturesByCity.csv` should be split to multiple files. Those should be partitioned to have a same file size or number of rows or logically by date. Moreover, if partition by data is too fine, PySpark can split it to larger unit of `month + year`.
-
 ## Data Dictionary
 ### Temperature Fact Table (aka `fact_temperature`)
 | Column                          | Description                                            |
@@ -87,3 +84,36 @@ This project aims for a data warehouse with Kimball's Bus architecture resulting
 | latitude     | Latitude of city                                 |
 | longitude    | Longitude of city                                |
 | country_code | Code of country where city belongs to            |
+
+## ETL Process Result
+In order to show one sample use case of the mentioned data model, here is a result when we ask a question "Give us the first five countries having the highest average temperature(s) in September, 1st 2013".
+
+### Query
+```sql
+SELECT
+	DISTINCT dc.country_code,
+	dc.country_name,
+	ft.average_temperature
+FROM fact_temperature ft
+JOIN dim_city dc
+ON dc.city_id = ft.city_id
+WHERE ft."date" = '2013-09-01'
+ORDER BY average_temperature DESC
+LIMIT 5
+```
+
+### Result Set from Query
+| country_code | country_name       | average_temperature |
+|--------------|--------------------|---------------------|
+| co           | Colombia           | 30                  |
+| mx           | Mexico             | 30                  |
+|              | United States      | 29                  |
+| do           | Dominican Republic | 29                  |
+| jm           | Jamaica            | 29                  |
+
+### Note to Result Set
+Even though we can execute the query and get the result set, we can see that there is a missing country code for country name of "United States". Therefore, this ETL pipeline will failed (see more in [Future Improvements](#future_improvements)).
+
+## <a name="future_improvements"></a> Future Improvements
+- In case of scaling up (let's say `World Temperature Data` size comes with 100 times of an original size), one file of `GlobalLandTemperaturesByCity.csv` should be split to multiple files. Those should be partitioned to have a same file size or number of rows or logically by date. Moreover, if partition by data is too fine, PySpark can split it to larger unit of `month + year`.
+- In case of missing country names discovered by data quality check, it should be one additional Airflow operator to figure those names out.
