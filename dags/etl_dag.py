@@ -28,7 +28,7 @@ with DAG(
     dag_id='etl_dag',
     default_args=default_args,
     description='Extract, load and transform data in Redshift with Airflow',
-    schedule_interval='@daily'
+    schedule_interval='0 7 * * *'
 ) as dag:
     redshift_conn_id: str = 'sample-data-pipeline-redshift-cluster'
     s3_conn_id: str = 'sample-data-pipeline-s3'
