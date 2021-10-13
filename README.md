@@ -85,6 +85,9 @@ This project aims for a data warehouse with Kimball's Bus architecture resulting
 | longitude    | Longitude of city                                |
 | country_code | Code of country where city belongs to            |
 
+### ER Diagram
+![ER Diagram](/er_diagram.png)
+
 ## ETL Process Result
 In order to show one sample use case of the mentioned data model, here is a result when we ask a question "Give us the first five countries having the highest average temperature(s) in September, 1st 2013".
 
